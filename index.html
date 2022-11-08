@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<head>
+    <script type="text/javascript">
+        function check() {
+            if (form.a.value == "" || form.b.value == "") {
+                alert("入力してください");    //エラーメッセージを出力
+            } else {
+                const idList = form.a.value.split("\n");
+                const b = BigInt(hexToBn(form.b.value));
+                let nearest = ""; let nearestDist = -1; let nearestHex = "";
+                idList.forEach(x => {
+                    if (x.includes(" ")) {
+                        x.replace(' ', '')
+                    }
+                    if (x == "") return;
+                    const idn = hexToBn(x);
+                    const dist = idn ^ b;
+                    if (nearestDist == -1 || nearestDist > dist) {
+                        nearestHex = x;
+                        nearest = idn;
+                        nearestDist = dist;
+                    }
+                })
+
+                document.getElementById("nearest").textContent = `nearest: ${nearestHex}`
+                document.getElementById("result0").textContent = `contentBin: ${(('0'.repeat(160)) + b.toString(2)).slice(-160)}`
+                document.getElementById("result1").textContent = `nearestBin: ${(('0'.repeat(160)) + nearest.toString(2)).slice(-160)}`
+                document.getElementById("result2").textContent = `xorBin:     ${(('0'.repeat(160)) + nearestDist.toString(2)).slice(-160)}`
+            }
+        }
+
+        function hexToBn(hex) {
+            if (hex.slice(0, 1) == "/") {
+                hex = hex.slice(1);
+            }
+            if (hex.length % 2) {
+                hex = '0' + hex;
+            }
+
+            var bn = BigInt(0);
+
+            while (hex.length != 0) {
+                bn = bn * BigInt(256);
+                var highbyte = hex.slice(0, 2);
+                bn += BigInt('0x' + highbyte);
+                hex = hex.slice(2)
+            }
+            return bn;
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <form name="form">
+            <textarea name="a" cols="40" rows="10">042d4ec998c64ddb9ab5c79aded054b800000000
+0e3792362b9d4743ab51d164c643a3f800000000
+2ad927692dd84ad791c3cd49d007796600000000
+2c52fefc6b514356a939ea011ecf729e00000000
+49b2a424234d484eab5bbe59c7cd8d1000000000
+4ccebe825c5440d1addcb1ff745d56dc00000000
+5aa2ae572ea64a9f8e734eedd95daf7900000000
+6bc1933f452d4a3d80fca48b68dde16b00000000
+76d4bf62b77e4eaba6ecc6154992141500000000
+7f3a03b5293e494bab51521fd635de6500000000
+9d5500bc83744a14a6cefd539a62682500000000
+a569661bf9e24e9f99a7382f463f734a00000000
+a6cbb31c62eb49d2bd7fcafbb2352ba200000000
+be43a63a0fa44ec48dd74e52ed24aa6b00000000
+cce3ea4eabfa435aac40bf0445481fce00000000
+d07b8294aeb744c183214868eea93b8600000000
+dbdabc9bcced43249c18f3597c623ce100000000
+ef7220b17e654963a5d73a946a04c29300000000
+fde7220b8a114bab9a13d083f47d511500000000
+</textarea>
+            <input type="text" name="b" size="40">
+            <!-- ↓onClickイベントを追加 -->
+            <input type="button" value="exec" onClick="check();">
+        </form>
+        <span id="nearest"></span>
+        <pre>
+            <span id="result0"></span>
+            <span id="result1"></span>
+            <span id="result2"></span>
+        </pre>
+    </div>
+
+</body>
+
+</html>
