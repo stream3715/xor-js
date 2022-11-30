@@ -22,18 +22,18 @@ function check() {
         xor: dist,
       });
     });
-      
+
     compareFn = function (a, b) {
-        if (a.xor < b.xor) {
-          return -1;
-        }
-        if (a.xor > b.xor) {
-          return 1;
-        }
-        // a は b と等しくなければならない
-        return 0;
+      if (a.xor < b.xor) {
+        return -1;
       }
-      
+      if (a.xor > b.xor) {
+        return 1;
+      }
+      // a は b と等しくなければならない
+      return 0;
+    };
+
     xors.sort(compareFn);
     console.log(xors);
 
